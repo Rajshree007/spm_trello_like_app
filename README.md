@@ -1,184 +1,331 @@
-<<<<<<< HEAD
 # TaskFlow — Trello-like Project Management App
 
 A full-featured Trello clone built with Node.js, Express, React, and SQLite. Supports boards, lists, cards with drag-and-drop, labels, checklists, board member invitations, and activity logs.
 
-## Stack
+## Tech Stack
 
-| Layer      | Technology                                  |
-|------------|---------------------------------------------|
-| Backend    | Node.js · Express · TypeScript              |
-| ORM        | Prisma (SQLite — zero config)               |
-| Auth       | JWT (jsonwebtoken) · bcrypt                 |
-| Validation | Zod                                         |
-| Frontend   | React 18 · TypeScript · Vite                |
-| Styling    | Tailwind CSS                                |
-| Data       | TanStack Query (react-query)                |
-| Drag & Drop| @dnd-kit/core + @dnd-kit/sortable           |
-| Testing    | Jest · Supertest (backend) · Vitest (frontend) |
+| Layer | Technology |
+|---|---|
+| Backend | Node.js, Express, TypeScript |
+| ORM | Prisma (SQLite — zero configuration) |
+| Authentication | JWT (jsonwebtoken), bcrypt |
+| Validation | Zod |
+| Frontend | React 18, TypeScript, Vite |
+| Styling | Tailwind CSS |
+| Data Fetching | TanStack Query (React Query) |
+| Drag and Drop | @dnd-kit/core, @dnd-kit/sortable |
+| Testing | Jest, Supertest (backend), Vitest (frontend) |
 
 ## Prerequisites
 
-- **Node.js** ≥ 18
-- **npm** ≥ 9
+- **Node.js** version 18 or later
+- **npm** version 9 or later
 
-No Docker, no PostgreSQL, no external services required.
+No Docker, PostgreSQL, or external services are required.
 
-## Setup
+## Setup Instructions
 
-### 1. Clone and install
+### 1. Clone the repository
 
 ```bash
-git clone <repo-url>
-cd trello-clone
+git clone https://github.com/Rajshree007/spm_trello_like_app.git
+cd spm_trello_like_app
+```
 
-# Install all dependencies (backend + frontend)
+### 2. Install dependencies
+
+Install backend dependencies:
+
+```bash
 npm install --prefix backend
+```
+
+Install frontend dependencies:
+
+```bash
 npm install --prefix frontend
 ```
 
-### 2. Configure environment
+### 3. Configure environment variables
+
+Copy the example environment file:
 
 ```bash
 cp backend/.env.example backend/.env
-# The defaults work out of the box — no changes needed for local dev
 ```
 
-### 3. Run database migrations
+The default configuration should work for local development. Verify the environment variables if your setup differs.
+
+### 4. Run database migrations
 
 ```bash
 cd backend
 npx prisma migrate dev --name init
 ```
 
-### 4. Seed the database (optional but recommended)
+This creates and initializes the SQLite database using the Prisma schema.
+
+### 5. Seed the database (optional)
+
+From the `backend` directory, run:
 
 ```bash
-cd backend
 npm run seed
 ```
 
-This creates two demo users and sample boards:
+This creates demo users and sample boards, if the seed script is configured as described below.
 
-| Email               | Password    |
-|---------------------|-------------|
-| juan@example.com    | password123 |
-| bob@example.com     | password123 |
+| Email | Password |
+|---|---|
+| juan@example.com | password123 |
+| bob@example.com | password123 |
 
-### 5. Start the app
+Use these credentials only in a local development environment.
 
-In two separate terminals:
+### 6. Start the application
+
+Run the backend and frontend in two separate terminal windows.
+
+**Terminal 1 — Backend**
 
 ```bash
-# Terminal 1 — Backend (port 3001)
 cd backend
 npm run dev
+```
 
-# Terminal 2 — Frontend (port 5173)
+The backend runs on port `3001`, assuming the default configuration.
+
+**Terminal 2 — Frontend**
+
+```bash
 cd frontend
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+The frontend runs on port `5173`, assuming the default Vite configuration.
 
-## Running tests
+Open the application in your browser:
+
+http://localhost:5173
+
+## Running Tests
+
+Run backend tests:
 
 ```bash
 cd backend
 npm test
 ```
 
-For coverage report:
+For backend test coverage, if the script is configured:
 
 ```bash
 npm run test:coverage
 ```
 
-Tests cover: auth (register, login, /me), board CRUD + member management, list CRUD, card CRUD + move, labels, and checklists.
+The documented backend test coverage includes authentication, board operations, board member management, lists, cards, labels, and checklists. Run the test suite to verify the features implemented in your current checkout.
 
-## Project structure
+## Project Structure
 
-```
-.
+```text
+spm_trello_like_app/
 ├── backend/
 │   ├── prisma/
-│   │   ├── schema.prisma      # Database schema
-│   │   └── seed.ts            # Demo data
+│   │   ├── schema.prisma
+│   │   └── seed.ts
 │   ├── src/
-│   │   ├── controllers/       # Route handlers (auth, boards, lists, cards)
-│   │   ├── middleware/        # JWT auth, error handler
-│   │   ├── routes/            # Express routers
-│   │   ├── lib/prisma.ts      # Shared Prisma client
-│   │   └── index.ts           # App factory + server entry
-│   └── tests/                 # Jest + Supertest integration tests
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── routes/
+│   │   ├── lib/
+│   │   │   └── prisma.ts
+│   │   └── index.ts
+│   └── tests/
 └── frontend/
     └── src/
-        ├── api/               # Axios API clients (auth, boards, lists, cards)
-        ├── components/        # Navbar, ListColumn, CardItem, CardModal
-        ├── contexts/          # AuthContext (JWT session)
-        ├── pages/             # Login, Register, Home, Board
-        └── types/             # Shared TypeScript interfaces
+        ├── api/
+        ├── components/
+        ├── contexts/
+        ├── pages/
+        └── types/
 ```
 
-## API overview
+### Backend
 
-```
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/auth/me
+- `prisma/` — Prisma schema, database migrations, and seed data.
+- `controllers/` — Handles application business logic.
+- `middleware/` — Authentication, request processing, and error handling.
+- `routes/` — Defines API endpoints.
+- `lib/prisma.ts` — Shared Prisma client.
+- `tests/` — Backend integration tests.
 
-GET    /api/boards
-POST   /api/boards
-GET    /api/boards/:id
-PATCH  /api/boards/:id
-DELETE /api/boards/:id
-POST   /api/boards/:id/members
-DELETE /api/boards/:id/members/:userId
+### Frontend
 
-GET    /api/boards/:boardId/lists
-POST   /api/boards/:boardId/lists
-PATCH  /api/boards/:boardId/lists/reorder
-PATCH  /api/boards/:boardId/lists/:id
-DELETE /api/boards/:boardId/lists/:id
+- `api/` — API clients for communicating with the backend.
+- `components/` — Reusable UI components, such as navigation, lists, cards, and modals.
+- `contexts/` — Application-wide state, including authentication.
+- `pages/` — Application screens, such as login, registration, home, and boards.
+- `types/` — TypeScript interfaces and shared types.
 
-GET    /api/lists/:listId/cards
-POST   /api/lists/:listId/cards
-GET    /api/cards/:id
-PATCH  /api/cards/:id
-DELETE /api/cards/:id
-PATCH  /api/cards/:id/move
-POST   /api/cards/:id/labels
-DELETE /api/cards/:id/labels/:labelId
-POST   /api/cards/:id/checklists
-DELETE /api/cards/:id/checklists/:checklistId
-POST   /api/cards/:id/checklists/:checklistId/items
-PATCH  /api/cards/:id/checklists/:checklistId/items/:itemId
-DELETE /api/cards/:id/checklists/:checklistId/items/:itemId
-```
+## API Overview
+
+The following endpoints describe the documented API. Availability may depend on the current implementation.
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Log in |
+| GET | `/api/auth/me` | Get the current user |
+
+### Boards
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/boards` | Get accessible boards |
+| POST | `/api/boards` | Create a board |
+| GET | `/api/boards/:id` | Get board details |
+| PATCH | `/api/boards/:id` | Update a board |
+| DELETE | `/api/boards/:id` | Delete a board |
+| POST | `/api/boards/:id/members` | Add a board member |
+| DELETE | `/api/boards/:id/members/:userId` | Remove a board member |
+
+### Lists
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/boards/:boardId/lists` | Get lists for a board |
+| POST | `/api/boards/:boardId/lists` | Create a list |
+| PATCH | `/api/boards/:boardId/lists/reorder` | Reorder lists |
+| PATCH | `/api/boards/:boardId/lists/:id` | Update a list |
+| DELETE | `/api/boards/:boardId/lists/:id` | Delete a list |
+
+### Cards
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/lists/:listId/cards` | Get cards in a list |
+| POST | `/api/lists/:listId/cards` | Create a card |
+| GET | `/api/cards/:id` | Get card details |
+| PATCH | `/api/cards/:id` | Update a card |
+| DELETE | `/api/cards/:id` | Delete a card |
+| PATCH | `/api/cards/:id/move` | Move a card |
+
+### Labels and Checklists
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/cards/:id/labels` | Add a label |
+| DELETE | `/api/cards/:id/labels/:labelId` | Remove a label |
+| POST | `/api/cards/:id/checklists` | Create a checklist |
+| DELETE | `/api/cards/:id/checklists/:checklistId` | Delete a checklist |
+| POST | `/api/cards/:id/checklists/:checklistId/items` | Add a checklist item |
+| PATCH | `/api/cards/:id/checklists/:checklistId/items/:itemId` | Update a checklist item |
+| DELETE | `/api/cards/:id/checklists/:checklistId/items/:itemId` | Delete a checklist item |
 
 ## Features
 
-### Core
-- [x] User registration / login / logout with JWT session persistence
-- [x] Board CRUD with background color selection
-- [x] List CRUD with ordering within boards
-- [x] Card CRUD with title, description, and due date
-- [x] Data persistence via SQLite (Prisma)
+### Core Features
 
-### Bonus
-- [x] **Drag and drop** — cards across lists, lists within board (@dnd-kit)
-- [x] **Card labels** — color-coded tags (add/remove from card modal)
-- [x] **Checklists** — create checklists, add/toggle/delete items with progress bar
-- [x] **Board member invitations** — invite by email, role management
-- [x] **Activity log** — card moves tracked and shown in card detail modal
+- [x] User registration and login with JWT authentication.
+- [x] Board creation, viewing, editing, and deletion.
+- [x] Board background color selection.
+- [x] List creation, editing, deletion, and ordering.
+- [x] Card creation, editing, and deletion.
+- [x] Card titles, descriptions, and due dates.
+- [x] SQLite database persistence through Prisma.
 
-## Technical decisions
+### Additional Features
 
-- **SQLite over PostgreSQL** — eliminates infrastructure setup friction for local evaluation. Schema is database-agnostic via Prisma; switching to Postgres requires only a one-line `DATABASE_URL` change.
-- **Floating-point positions** — list and card positions use `Float` to allow insertions without re-indexing all siblings (same approach as Jira/Linear).
-- **Optimistic UI for drag-and-drop** — list/card state is mirrored locally during a drag and synced to the server on `dragEnd`, giving instant visual feedback.
-- **Factory function for Express app** — `createApp()` in `src/index.ts` makes the app importable in tests without starting a server, enabling clean integration tests.
-- **Zod for input validation** — validation errors are caught by the global error handler and returned with structured field-level messages.
-=======
-# spm_trello_like_app
->>>>>>> 1daa958b52f8f374f89759984c1ae711a74e4cad
+- [x] **Drag and drop:** Move cards between lists and reorder lists using `@dnd-kit`.
+- [x] **Card labels:** Organize cards with color-coded labels.
+- [x] **Checklists:** Create checklists, manage items, and track completion progress.
+- [x] **Board member invitations:** Invite members by email and manage membership.
+- [x] **Activity log:** Track card movements and display activity in card details.
+- [x] **Authentication persistence:** Maintain user sessions using JWT-based authentication.
+
+Feature checkboxes reflect the project's intended or documented functionality; verify them against the current codebase.
+
+## Technical Decisions
+
+### SQLite and Prisma
+
+SQLite simplifies local development by avoiding the need to configure a separate database server. Prisma provides database access through a typed schema and migration system.
+
+### TypeScript
+
+TypeScript adds static typing to both the backend and frontend, helping identify errors during development and improving code maintainability.
+
+### JWT Authentication
+
+JSON Web Tokens support authenticated API requests. Password hashing with bcrypt helps protect stored user passwords.
+
+### Zod Validation
+
+Zod validates incoming data and helps return structured validation errors when requests contain invalid input.
+
+### Drag-and-Drop Interface
+
+The `@dnd-kit` libraries support interactive movement and reordering of cards and lists.
+
+### React and Vite
+
+React provides reusable UI components, while Vite supports fast local development and frontend builds.
+
+## Troubleshooting
+
+### Backend dependency errors
+
+From the project root, run:
+
+```bash
+npm install --prefix backend
+```
+
+### Frontend dependency errors
+
+```bash
+npm install --prefix frontend
+```
+
+### Database errors
+
+From the backend directory, verify that the environment file exists and run the Prisma migration:
+
+```bash
+npx prisma migrate dev
+```
+
+### Port already in use
+
+If ports `3001` or `5173` are occupied, stop the conflicting process or configure the application to use different ports.
+
+### API connection errors
+
+Ensure the backend is running and verify the frontend API base URL and backend port.
+
+## Future Improvements
+
+- Add real-time collaboration and notifications.
+- Improve search, filtering, and sorting.
+- Add additional board permissions and roles.
+- Support file attachments on cards.
+- Improve accessibility and mobile responsiveness.
+- Add CI workflows for automated testing and builds.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make and test your changes.
+4. Commit your changes with a descriptive message.
+5. Open a pull request.
+
+## License
+
+Add the appropriate license information for this project before distributing it publicly.
+
+---
+
+**TaskFlow** — Organize work, collaborate with teammates, and track progress in one place.
