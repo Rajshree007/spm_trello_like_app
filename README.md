@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TaskFlow — Trello-like Project Management App
 
 A full-featured Trello clone built with Node.js, Express, React, and SQLite. Supports boards, lists, cards with drag-and-drop, labels, checklists, board member invitations, and activity logs.
@@ -178,3 +179,6 @@ DELETE /api/cards/:id/checklists/:checklistId/items/:itemId
 - **Optimistic UI for drag-and-drop** — list/card state is mirrored locally during a drag and synced to the server on `dragEnd`, giving instant visual feedback.
 - **Factory function for Express app** — `createApp()` in `src/index.ts` makes the app importable in tests without starting a server, enabling clean integration tests.
 - **Zod for input validation** — validation errors are caught by the global error handler and returned with structured field-level messages.
+=======
+# spm_trello_like_app
+>>>>>>> 1daa958b52f8f374f89759984c1ae711a74e4cad
